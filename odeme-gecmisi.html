@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödeme Geçmişi - Nyx Destek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.5;
+            padding-top: 80px;
+        }
+        
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+            opacity: 0.3;
+        }
+        
+        .page-header .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+        
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+        
+        /* Payment History */
+        .payment-history {
+            margin-bottom: 4rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .filter-btn {
+            background: white;
+            border: 1px solid var(--gray-200);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .payment-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .payment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .payment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .payment-card.completed {
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .payment-card.pending {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .payment-card.failed {
+            border-left: 4px solid var(--danger);
+        }
+        
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .payment-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .payment-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        
+        .payment-details {
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .detail-label {
+            color: var(--gray-600);
+        }
+        
+        .detail-value {
+            font-weight: 500;
+            color: #1e293b;
+        }
+        
+        .payment-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+        
+        .status-completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--secondary);
+        }
+        
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .status-failed {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .plan-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+        
+        .plan-option {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plan-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .plan-option.featured {
+            border: 2px solid var(--primary);
+            background: rgba(79, 70, 229, 0.03);
+        }
+        
+        .plan-option .plan-duration {
+            display: block;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.25rem;
+        }
+        
+        .plan-option .plan-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .plan-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-bottom-left-radius: 8px;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .device-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.1);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gray-300);
+            color: var(--gray-700);
+        }
+        
+        .btn-outline:hover {
+            background: var(--gray-100);
+            transform: translateY(-2px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            grid-column: 1 / -1;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--gray-300);
+            margin-bottom: 1.5rem;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-state p {
+            color: var(--gray-500);
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Profile Sidebar */
+        .profile-sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100vh;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1100;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .profile-sidebar.open {
+            left: 0;
+        }
+        
+        .profile-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            position: relative;
+        }
+        
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .profile-name {
+            font-size: 1.25rem;
+            margin: 0 0 0.25rem 0;
+            color: var(--gray-900);
+        }
+        
+        .profile-email {
+            color: var(--gray-600);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        .profile-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-item i {
+            width: 24px;
+            margin-right: 1rem;
+            text-align: center;
+            color: var(--gray-500);
+        }
+        
+        .nav-item:hover, 
+        .nav-item.active {
+            background: rgba(79, 70, 229, 0.05);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .nav-item:hover i,
+        .nav-item.active i {
+            color: var(--primary);
+        }
+        
+        .close-sidebar {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .close-sidebar:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .profile-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .profile-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--gray-700);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .header-content {
+                justify-content: space-between;
+            }
+            
+            .profile-sidebar {
+                left: -100%;
+                width: 280px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .payment-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .payment-card {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .payment-card:nth-child(1) { animation-delay: 0.1s; }
+        .payment-card:nth-child(2) { animation-delay: 0.2s; }
+        .payment-card:nth-child(3) { animation-delay: 0.3s; }
+        .payment-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- Profile Sidebar -->
+    <div class="profile-sidebar" id="profileSidebar">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <h3 class="profile-name">Misafir Kullanıcı</h3>
+                <p class="profile-email">Giriş Yap / Kayıt Ol</p>
+            </div>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="profile-nav">
+            <a href="#" class="nav-item active" data-section="profile">
+                <i class="fas fa-user"></i>
+                <span>Profilim</span>
+            </a>
+            <a href="#" class="nav-item" data-section="orders">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Siparişlerim</span>
+            </a>
+            <a href="#" class="nav-item" data-section="settings">
+                <i class="fas fa-cog"></i>
+                <span>Ayarlar</span>
+            </a>
+            <a href="#" class="nav-item" data-section="logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Çıkış Yap</span>
+            </a>
+        </nav>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="index.html" class="logo">
+                    <span>Nyx</span>Destek
+                </a>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="index.html">Ana Sayfa</a></li>
+                        <li><a href="sistem-durumu.html">Sistem Durumu</a></li>
+                        <li><a href="surum-notlari.html">Sürüm Notları</a></li>
+                        <li><a href="anketler.html">Anketler</a></li>
+                        <li><a href="yorumlar.html">Yorumlar</a></li>
+                        <li><a href="odeme-gecmisi.html" class="active">Ödemeler</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <button class="profile-btn" id="profileBtn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Ödeme Geçmişi</h1>
+            <p>Tüm ödeme işlemlerinizin detaylı dökümü burada listelenmektedir.</p>
+        </div>
+    </section>
+
+    <!-- Payment History -->
+    <section class="payment-history">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Üyelik Planları</h2>
+                <p class="section-subtitle">İhtiyacınıza uygun planı seçerek hemen başlayın</p>
+            </div>
+            
+            <div class="payment-cards">
+                <!-- Mobile Rooted Plans -->
+                <div class="payment-card">
+                    <div class="payment-header">
+                        <h3 class="payment-title">Mobil (Rootlu) Üyelik</h3>
+                        <div class="device-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                    </div>
+                    <div class="plan-options">
+                        <div class="plan-option" data-plan="mobile-weekly" data-price="500">
+                            <span class="plan-duration">1 Haftalık</span>
+                            <span class="plan-price">₺500</span>
+                        </div>
+                        <div class="plan-option" data-plan="mobile-monthly" data-price="800">
+                            <span class="plan-duration">1 Aylık</span>
+                            <span class="plan-price">₺800</span>
+                        </div>
+                        <div class="plan-option featured" data-plan="mobile-unlimited" data-price="1000">
+                            <span class="plan-duration">Sınırsız</span>
+                            <span class="plan-price">₺1000</span>
+                            <span class="plan-badge">Popüler</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block purchase-btn" data-type="mobile">
+                        <i class="fab fa-telegram"></i> Satın Al
+                    </button>
+                </div>
+
+                <!-- PC Rooted Plans -->
+                <div class="payment-card">
+                    <div class="payment-header">
+                        <h3 class="payment-title">PC (Rootlu) Üyelik</h3>
+                        <div class="device-icon">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                    </div>
+                    <div class="plan-options">
+                        <div class="plan-option" data-plan="pc-weekly" data-price="500">
+                            <span class="plan-duration">1 Haftalık</span>
+                            <span class="plan-price">₺500</span>
+                        </div>
+                        <div class="plan-option" data-plan="pc-monthly" data-price="800">
+                            <span class="plan-duration">1 Aylık</span>
+                            <span class="plan-price">₺800</span>
+                        </div>
+                        <div class="plan-option featured" data-plan="pc-unlimited" data-price="1000">
+                            <span class="plan-duration">Sınırsız</span>
+                            <span class="plan-price">₺1000</span>
+                            <span class="plan-badge">Popüler</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block purchase-btn" data-type="pc">
+                        <i class="fab fa-telegram"></i> Satın Al
+                    </button>
+                </div>
+                
+                <!-- Empty State (Hidden by default) -->
+                <!-- <div class="empty-state" style="display: none;">
+                    <i class="fas fa-receipt"></i>
+                    <h3>Henüz ödeme geçmişiniz yok</h3>
+                    <p>Henüz herhangi bir ödeme işlemi gerçekleştirmediniz. Hizmetlerimizi keşfetmek için aşağıdaki butona tıklayın.</p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-shopping-cart"></i> Hizmetleri Görüntüle
+                    </button>
+                </div> -->
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Profile Sidebar Toggle
+            const profileBtn = document.getElementById('profileBtn');
+            const profileSidebar = document.getElementById('profileSidebar');
+            const closeSidebar = document.getElementById('closeSidebar');
+            const overlay = document.getElementById('overlay');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            // Toggle sidebar
+            function toggleSidebar() {
+                profileSidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+                document.body.style.overflow = profileSidebar.classList.contains('open') ? 'hidden' : '';
+            }
+            
+            // Close sidebar when clicking outside
+            function closeSidebarHandler(e) {
+                if (e.target === overlay) {
+                    toggleSidebar();
+                }
+            }
+            
+            // Navigation between sections
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.dataset.section;
+                    
+                    // Remove active class from all items
+                    navItems.forEach(navItem => navItem.classList.remove('active'));
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Handle navigation
+                    switch(section) {
+                        case 'profile':
+                            // Redirect to profile page or show profile section
+                            window.location.href = 'profilim.html'; // Create this page if needed
+                            break;
+                        case 'orders':
+                            // Redirect to orders page
+                            window.location.href = 'siparislerim.html'; // Create this page if needed
+                            break;
+                        case 'settings':
+                            // Redirect to settings page
+                            window.location.href = 'ayarlar.html'; // Create this page if needed
+                            break;
+                        case 'logout':
+                            // Handle logout
+                            // Clear any stored user data
+                            localStorage.removeItem('userToken');
+                            sessionStorage.clear();
+                            // Redirect to login page
+                            window.location.href = 'login.html'; // Make sure this page exists
+                            break;
+                    }
+                    
+                    // Close sidebar on mobile after navigation
+                    if (window.innerWidth <= 992) {
+                        toggleSidebar();
+                    }
+                });
+            });
+            
+            // Event Listeners
+            profileBtn.addEventListener('click', toggleSidebar);
+            closeSidebar.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', closeSidebarHandler);
+            
+            // Mobile menu toggle
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    // Add mobile menu functionality if needed
+                    console.log('Mobile menu clicked');
+                });
+            }
+            
+            // Close sidebar when clicking on a link
+            document.querySelectorAll('.profile-nav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 992) {
+                        toggleSidebar();
+                    }
+                });
+            });
+            // Handle plan selection
+            const planOptions = document.querySelectorAll('.plan-option');
+            const purchaseButtons = document.querySelectorAll('.purchase-btn');
+            
+            planOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options in the same card
+                    const parentCard = this.closest('.payment-card');
+                    parentCard.querySelectorAll('.plan-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add active class to selected option
+                    this.classList.add('selected');
+                    
+                    // Update the purchase button with selected plan info
+                    const planType = this.dataset.plan;
+                    const price = this.dataset.price;
+                    const purchaseBtn = parentCard.querySelector('.purchase-btn');
+                    purchaseBtn.dataset.plan = planType;
+                    purchaseBtn.innerHTML = `<i class="fab fa-telegram"></i> ${price}₺ ile Satın Al`;
+                });
+            });
+            
+            // Handle purchase button click
+            purchaseButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const planType = this.dataset.plan;
+                    const deviceType = this.dataset.type;
+                    
+                    if (!planType) {
+                        alert('Lütfen bir üyelik süresi seçiniz.');
+                        return;
+                    }
+                    
+                    // Redirect to Telegram with plan information
+                    const planInfo = {
+                        'mobile-weekly': 'Mobil 1 Haftalık',
+                        'mobile-monthly': 'Mobil 1 Aylık',
+                        'mobile-unlimited': 'Mobil Sınırsız',
+                        'pc-weekly': 'PC 1 Haftalık',
+                        'pc-monthly': 'PC 1 Aylık',
+                        'pc-unlimited': 'PC Sınırsız'
+                    };
+                    
+                    const message = `Merhaba, ${planInfo[planType]} üyelik satın almak istiyorum.`;
+                    const encodedMessage = encodeURIComponent(message);
+                    window.open(`https://t.me/xakcheat?text=${encodedMessage}`, '_blank');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

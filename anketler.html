@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anketler - Nyx Destek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .modern-nav {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ffffff;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        .polls-container {
+            max-width: 1200px;
+            margin: 6rem auto 4rem;
+            padding: 0 1.5rem;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #ffffff;
+            font-size: 2.5rem;
+            position: relative;
+            padding-bottom: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            border-radius: 2px;
+        }
+
+        .polls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .poll-card {
+            background: rgba(30, 30, 35, 0.8);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transform: translateY(0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poll-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+        }
+
+        .poll-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .poll-header {
+            padding: 1.75rem 1.5rem 1.5rem;
+            position: relative;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .poll-title {
+            margin: 0 0 0.5rem 0;
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 600;
+            line-height: 1.3;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .poll-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: #a0a0a0;
+        }
+
+        .poll-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-right: 1rem;
+        }
+
+        .poll-meta i {
+            margin-right: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .poll-body {
+            padding: 1.75rem 1.5rem;
+        }
+
+        .poll-description {
+            color: #d1d5db;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .poll-question {
+            margin: 0 0 1.5rem;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .poll-options {
+            margin-bottom: 1.5rem;
+        }
+
+        .poll-option {
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+
+        .poll-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .poll-option label {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .poll-option label:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .poll-option input[type="radio"]:checked + label {
+            background: rgba(79, 70, 229, 0.15);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .poll-option input[type="radio"]:checked + label::before {
+            content: '✓';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-size: 12px;
+        }
+
+        .poll-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 1.75rem;
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poll-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .poll-button:hover::before {
+            left: 100%;
+        }
+
+        .poll-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .poll-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.3);
+        }
+
+        .poll-footer {
+            padding: 1.25rem 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .poll-votes {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .poll-votes i {
+            color: var(--primary);
+            font-size: 1.1em;
+        }
+
+        .poll-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .poll-tag {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(99, 102, 241, 0.1);
+            color: #8b5cf6;
+            padding: 0.35rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .poll-tag:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .no-polls {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .no-polls i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .no-polls h3 {
+            margin: 0.5rem 0;
+            color: var(--text-color);
+        }
+
+        .no-polls p {
+            margin: 0.5rem 0 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-create-poll {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-create-poll:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .polls-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .polls-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.95);
+                flex-direction: column;
+                padding: 1.5rem;
+                gap: 1rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .nav-links.active {
+                display: flex;
+                animation: slideDown 0.3s ease-out;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Navigation -->
+    <nav class="modern-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-star"></i> NyX Destek
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Ana Sayfa</a></li>
+                <li><a href="sistem-durumu.html">Sistem Durumu</a></li>
+                <li><a href="surum-notlari.html">Sürüm Notları</a></li>
+                <li><a href="anketler.html" class="active">Anketler</a></li>
+                <li><a href="yorumlar.html">Yorumlar</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="polls-container">
+        <h1 class="page-title">Aktif Anketler</h1>
+        
+        <div class="polls-grid">
+            <!-- Anket 1 -->
+            <div class="poll-card">
+                <div class="poll-header">
+                    <h3 class="poll-title">Yeni Özellik İstekleri</h3>
+                    <div class="poll-meta">
+                        <span><i class="far fa-calendar-alt"></i> 15 Ağu 2023</span>
+                        <span><i class="far fa-user"></i> 124 Katılım</span>
+                    </div>
+                </div>
+                <div class="poll-body">
+                    <p class="poll-description">Hangi yeni özellikleri görmek istersiniz? Görüşleriniz bizim için değerli!</p>
+                    
+                    <div class="poll-options">
+                        <div class="poll-option">
+                            <input type="radio" id="feature1" name="featurePoll" value="dark_mode">
+                            <label for="feature1">Karanlık Tema Desteği</label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="feature2" name="featurePoll" value="notifications">
+                            <label for="feature2">Bildirim Sistemi</label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="feature3" name="featurePoll" value="analytics">
+                            <label for="feature3">Detaylı Analitik Paneli</label>
+                        </div>
+                    </div>
+                    
+                    <div class="poll-tags">
+                        <span class="poll-tag"><i class="fas fa-tag"></i> Özellik İsteği</span>
+                        <span class="poll-tag"><i class="fas fa-bullhorn"></i> Güncelleme</span>
+                    </div>
+                </div>
+                <div class="poll-footer">
+                    <div class="poll-votes">
+                        <i class="fas fa-users"></i> 124 oy kullanıldı
+                    </div>
+                    <button class="poll-button">
+                        <i class="fas fa-paper-plane"></i> Oyla
+                    </button>
+                </div>
+            </div>
+
+            <!-- Anket 2 -->
+            <div class="poll-card">
+                <div class="poll-header">
+                    <h3 class="poll-title">Müşteri Memnuniyeti</h3>
+                    <div class="poll-meta">
+                        <span><i class="far fa-calendar-alt"></i> 20 Ağu 2023</span>
+                        <span><i class="far fa-user"></i> 89 Katılım</span>
+                    </div>
+                </div>
+                <div class="poll-body">
+                    <p class="poll-description">Hizmet kalitemizi nasıl değerlendirirsiniz? Görüşleriniz bizim için çok değerli.</p>
+                    
+                    <div class="poll-options">
+                        <div class="poll-option">
+                            <input type="radio" id="satisfaction1" name="satisfactionPoll" value="excellent">
+                            <label for="satisfaction1">Mükemmel</label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="satisfaction2" name="satisfactionPoll" value="good">
+                            <label for="satisfaction2">İyi</label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="satisfaction3" name="satisfactionPoll" value="average">
+                            <label for="satisfaction3">Orta</label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="satisfaction4" name="satisfactionPoll" value="poor">
+                            <label for="satisfaction4">Geliştirilebilir</label>
+                        </div>
+                    </div>
+                    
+                    <div class="poll-tags">
+                        <span class="poll-tag"><i class="fas fa-star"></i> Memnuniyet</span>
+                        <span class="poll-tag"><i class="fas fa-comment-alt"></i> Geri Bildirim</span>
+                    </div>
+                </div>
+                <div class="poll-footer">
+                    <div class="poll-votes">
+                        <i class="fas fa-users"></i> 89 oy kullanıldı
+                    </div>
+                    <button class="poll-button">
+                        <i class="fas fa-paper-plane"></i> Oyla
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; 2023 NyX Destek. Tüm hakları saklıdır.</p>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenuBtn.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+            });
+        }
+
+        // Close mobile menu when clicking on a nav link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Poll functionality
+        document.querySelectorAll('.poll-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const pollCard = this.closest('.poll-card');
+                const selectedOption = pollCard.querySelector('input[type="radio"]:checked');
+                
+                if (!selectedOption) {
+                    alert('Lütfen bir seçenek seçiniz.');
+                    return;
+                }
+                
+                // Here you would typically send the vote to your server
+                alert('Oyunuz başarıyla kaydedildi: ' + selectedOption.nextElementSibling.textContent);
+                
+                // Disable all options after voting
+                pollCard.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.disabled = true;
+                });
+                
+                // Update UI to show vote was cast
+                this.innerHTML = '<i class="fas fa-check"></i> Oyladınız';
+                this.disabled = true;
+                
+                // Update vote count
+                const voteCount = pollCard.querySelector('.poll-votes i').parentNode;
+                const currentVotes = parseInt(voteCount.textContent);
+                voteCount.innerHTML = `<i class="fas fa-users"></i> ${currentVotes + 1} oy kullanıldı`;
+            });
+        });
+
+        // Add hover effect to poll options
+        document.querySelectorAll('.poll-option label').forEach(label => {
+            label.addEventListener('mouseenter', function() {
+                this.style.background = 'rgba(255, 255, 255, 0.08)';
+            });
+            
+            label.addEventListener('mouseleave', function() {
+                if (!this.previousElementSibling.checked) {
+                    this.style.background = 'rgba(255, 255, 255, 0.05)';
+                }
+            });
+        });
+    </script>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="option3" name="poll1" value="3">
+                            <label for="option3">
+                                <span class="option-text">
+                                    <span>Entegrasyonlar</span>
+                                    <span class="percentage">19%</span>
+                                </span>
+                                <span class="percentage-bar" style="width: 19%;"></span>
+                            </label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="option4" name="poll1" value="4">
+                            <label for="option4">
+                                <span class="option-text">
+                                    <span>Performans iyileştirmeleri</span>
+                                    <span class="percentage">11%</span>
+                                </span>
+                                <span class="percentage-bar" style="width: 11%;"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="poll-tags">
+                        <span class="poll-tag">Özellik İsteği</span>
+                        <span class="poll-tag">Güncelleme</span>
+                    </div>
+                </div>
+                <div class="poll-footer">
+                    <div class="poll-votes">
+                        <i class="fas fa-users"></i> 245 oy
+                    </div>
+                    <button class="btn-vote">Oy Ver</button>
+                </div>
+            </div>
+
+            <!-- Anket 2 -->
+            <div class="poll-card">
+                <div class="poll-header">
+                    <h3 class="poll-title">Müşteri Memnuniyeti</h3>
+                    <div class="poll-meta">
+                        <span><i class="far fa-calendar-alt"></i> 20 Ağu 2023</span>
+                        <span><i class="far fa-user"></i> 178 katılım</span>
+                    </div>
+                </div>
+                <div class="poll-body">
+                    <p class="poll-question">Hizmetimizden ne kadar memnun kaldınız?</p>
+                    <div class="poll-options">
+                        <div class="poll-option">
+                            <input type="radio" id="option5" name="poll2" value="5">
+                            <label for="option5">
+                                <span class="option-text">
+                                    <span>Çok Memnun</span>
+                                    <span class="percentage">65%</span>
+                                </span>
+                                <span class="percentage-bar" style="width: 65%;"></span>
+                            </label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="option6" name="poll2" value="6">
+                            <label for="option6">
+                                <span class="option-text">
+                                    <span>Memnun</span>
+                                    <span class="percentage">25%</span>
+                                </span>
+                                <span class="percentage-bar" style="width: 25%;"></span>
+                            </label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="option7" name="poll2" value="7">
+                            <label for="option7">
+                                <span class="option-text">
+                                    <span>Kararsızım</span>
+                                    <span class="percentage">6%</span>
+                                </span>
+                                <span class="percentage-bar" style="width: 6%;"></span>
+                            </label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="option8" name="poll2" value="8">
+                            <label for="option8">
+                                <span class="option-text">
+                                    <span>Memnun Değilim</span>
+                                    <span class="percentage">4%</span>
+                                </span>
+                                <span class="percentage-bar" style="width: 4%;"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="poll-tags">
+                        <span class="poll-tag">Memnuniyet</span>
+                        <span class="poll-tag">Geribildirim</span>
+                    </div>
+                </div>
+                <div class="poll-footer">
+                    <div class="poll-votes">
+                        <i class="fas fa-users"></i> 178 oy
+                    </div>
+                    <button class="btn-vote">Oy Ver</button>
+                </div>
+            </div>
+
+            <!-- Anket 3 -->
+            <div class="poll-card">
+                <div class="poll-header">
+                    <h3 class="poll-title">Yeni İçerik Önerileri</h3>
+                    <div class="poll-meta">
+                        <span><i class="far fa-calendar-alt"></i> 25 Ağu 2023</span>
+                        <span><i class="far fa-user"></i> 312 katılım</span>
+                    </div>
+                </div>
+                <div class="poll-body">
+                    <p class="poll-question">Hangi konuda daha fazla içerik görmek istersiniz?</p>
+                    <div class="poll-options">
+                        <div class="poll-option">
+                            <input type="radio" id="option9" name="poll3" value="9">
+                            <label for="option9">
+                                <span class="option-text">
+                                    <span>Eğitim Videoları</span>
+                                    <span class="percentage">38%</span>
+                                </span>
+                                <span class="percentage-bar" style="width: 38%;"></span>
+                            </label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="option10" name="poll3" value="10">
+                            <label for="option10">
+                                <span class="option-text">
+                                    <span>Kullanım Kılavuzları</span>
+                                    <span class="percentage">32%</span>
+                                </span>
+                                <span class="percentage-bar" style="width: 32%;"></span>
+                            </label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="option11" name="poll3" value="11">
+                            <label for="option11">
+                                <span class="option-text">
+                                    <span>Vaka Çalışmaları</span>
+                                    <span class="percentage">18%</span>
+                                </span>
+                                <span class="percentage-bar" style="width: 18%;"></span>
+                            </label>
+                        </div>
+                        <div class="poll-option">
+                            <input type="radio" id="option12" name="poll3" value="12">
+                            <label for="option12">
+                                <span class="option-text">
+                                    <span>Webinarlar</span>
+                                    <span class="percentage">12%</span>
+                                </span>
+                                <span class="percentage-bar" style="width: 12%;"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="poll-tags">
+                        <span class="poll-tag">İçerik</span>
+                        <span class="poll-tag">Eğitim</span>
+                    </div>
+                </div>
+                <div class="poll-footer">
+                    <div class="poll-votes">
+                        <i class="fas fa-users"></i> 312 oy
+                    </div>
+                    <button class="btn-vote">Oy Ver</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <a href="#" id="back-to-top" class="back-to-top" title="Yukarı Çık">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Nyx Destek. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Gelişmiş mobil menü fonksiyonları
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileNav = document.getElementById('mobileNav');
+            const closeMenuBtn = document.getElementById('closeMenu');
+            let isMenuOpen = false;
+            
+            function toggleMenu() {
+                isMenuOpen = !isMenuOpen;
+                
+                if (isMenuOpen) {
+                    mobileNav.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                    // Animasyon için gecikme
+                    setTimeout(() => {
+                        mobileNav.classList.add('active');
+                    }, 10);
+                } else {
+                    mobileNav.classList.remove('active');
+                    document.body.style.overflow = '';
+                    
+                    // Menüyü kapatma animasyonu bittikten sonra gizle
+                    setTimeout(() => {
+                        if (!isMenuOpen) {
+                            mobileNav.style.display = 'none';
+                        }
+                    }, 300);
+                }
+            }
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', toggleMenu);
+            }
+            
+            if (closeMenuBtn) {
+                closeMenuBtn.addEventListener('click', toggleMenu);
+            }
+            
+            // Menü dışına tıklandığında kapat
+            if (mobileNav) {
+                mobileNav.addEventListener('click', (e) => {
+                    if (e.target === mobileNav) {
+                        toggleMenu();
+                    }
+                });
+            }
+            
+            // ESC tuşu ile kapat
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && isMenuOpen) {
+                    toggleMenu();
+                }
+            });
+            
+            // Mobil menü butonunu göster/gizle
+            function updateMobileMenuButton() {
+                if (window.innerWidth <= 992) {
+                    if (mobileMenuBtn) mobileMenuBtn.style.display = 'flex';
+                } else {
+                    if (mobileMenuBtn) mobileMenuBtn.style.display = 'none';
+                    // Masaüstü görünümüne geçildiğinde menüyü kapat
+                    if (isMenuOpen) {
+                        toggleMenu();
+                    }
+                }
+            }
+            
+            // Sayfa yüklendiğinde ve boyut değiştiğinde kontrol et
+            window.addEventListener('load', updateMobileMenuButton);
+            window.addEventListener('resize', updateMobileMenuButton);
+            
+            // Sayfa yüklendiğinde bir kere çalıştır
+            updateMobileMenuButton();
+            
+            // Anket işlevselliği
+            function setupPolls() {
+                const pollForms = document.querySelectorAll('.poll-form');
+                
+                pollForms.forEach(form => {
+                    const pollId = form.dataset.pollId;
+                    const resultsDiv = document.getElementById(`results-${pollId}`);
+                    const submitBtn = form.querySelector('.poll-btn');
+                    const options = form.querySelectorAll('input[type="radio"]');
+                    
+                    // Daha önce oy kullanılmış mı kontrol et
+                    const hasVoted = localStorage.getItem(`poll_${pollId}_voted`) === 'true';
+                    
+                    if (hasVoted) {
+                        showResults(form, pollId);
+                    }
+                    
+                    // Form gönderimini dinle
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        const selectedOption = form.querySelector('input[type="radio"]:checked');
+                        
+                        if (!selectedOption) {
+                            alert('Lütfen bir seçenek seçiniz.');
+                            return;
+                        }
+                        
+                        // Burada gerçek bir AJAX isteği yapılabilir
+                        // Şimdilik sadece sonuçları gösteriyoruz
+                        
+                        // Oyu kaydet
+                        localStorage.setItem(`poll_${pollId}_voted`, 'true');
+                        localStorage.setItem(`poll_${pollId}_selected`, selectedOption.value);
+                        
+                        // Sonuçları göster
+                        showResults(form, pollId);
+                        
+                        // Butonu devre dışı bırak
+                        if (submitBtn) {
+                            submitBtn.disabled = true;
+                            submitBtn.textContent = 'Oyunuz Kaydedildi';
+                        }
+                    });
+                    
+                    // Seçenek değiştiğinde butonu aktifleştir
+                    options.forEach(option => {
+                        option.addEventListener('change', function() {
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                            }
+                        });
+                    });
+                });
+                
+                function showResults(form, pollId) {
+                    const resultsDiv = document.getElementById(`results-${pollId}`);
+                    const submitBtn = form.querySelector('.poll-btn');
+                    const options = form.querySelectorAll('.poll-option');
+                    
+                    if (!resultsDiv) return;
+                    
+                    // Sonuçları göster
+                    resultsDiv.classList.add('active');
+                    
+                    // Butonu güncelle
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Oyunuz Kaydedildi';
+                    }
+                    
+                    // Rastgele sonuçlar oluştur (gerçek uygulamada sunucudan alınacak)
+                    options.forEach(option => {
+                        const optionId = option.querySelector('input').value;
+                        const resultItem = resultsDiv.querySelector(`.result-item[data-option="${optionId}"]`);
+                        const progressBar = resultItem?.querySelector('.result-progress');
+                        
+                        if (progressBar) {
+                            // Rastgele yüzde oluştur (toplam %100 olacak şekilde)
+                            const percentage = Math.floor(Math.random() * 30) + 10; // %10-40 arası
+                            progressBar.style.width = `${percentage}%`;
+                            progressBar.previousElementSibling.querySelector('.result-percentage').textContent = `${percentage}%`;
+                        }
+                    });
+                    
+                    // Tüm radio butonlarını devre dışı bırak
+                    options.forEach(option => {
+                        const radio = option.querySelector('input[type="radio"]');
+                        if (radio) radio.disabled = true;
+                    });
+                }
+            }
+            
+            // Sayfa yüklendiğinde anketleri başlat
+            setupPolls();
+        });
+    </script>
+</body>
+</html>

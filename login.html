@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Nyx Destek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6cf7;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-bg: #f8f9fa;
+            --text-color: #2c3e50;
+            --text-muted: #6c757d;
+            --border-radius: 8px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 420px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .login-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .login-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .login-form {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.25);
+            outline: none;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: #3a5bd9;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .forgot-password {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .divider::before {
+            margin-right: 1rem;
+        }
+
+        .divider::after {
+            margin-left: 1rem;
+        }
+
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            border: 1px solid #ddd;
+            background: white;
+            color: var(--text-color);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .social-btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .social-btn.google { color: #DB4437; }
+        .social-btn.facebook { color: #4267B2; }
+        .social-btn.apple { color: #000; }
+
+        .social-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .register-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 0.25rem;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 20px;
+            }
+            
+            .login-header {
+                padding: 1.5rem 1rem;
+            }
+            
+            .login-form {
+                padding: 1.5rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Hoş Geldiniz</h1>
+            <p>Hesabınıza giriş yapın</p>
+        </div>
+        
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="email">E-posta Adresi</label>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" class="form-control" placeholder="ornek@email.com" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <label for="password">Şifre</label>
+                    <a href="#" class="forgot-password" style="margin: 0; font-size: 0.85rem;">Şifremi Unuttum?</a>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                    <i class="fas fa-eye-slash toggle-password" 
+                       style="position: absolute; right: 15px; cursor: pointer; color: var(--text-muted);"
+                       onclick="togglePassword('password')"></i>
+                </div>
+            </div>
+            
+            <div class="form-group" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                <input type="checkbox" id="remember" style="margin-right: 8px;">
+                <label for="remember" style="margin: 0; font-weight: normal; cursor: pointer;">Beni Hatırla</label>
+            </div>
+            
+            <button type="submit" class="btn">Giriş Yap</button>
+            
+            <div class="divider">veya</div>
+            
+            <div class="social-login">
+                <button type="button" class="social-btn google">
+                    <i class="fab fa-google"></i> Google ile Giriş Yap
+                </button>
+                <button type="button" class="social-btn facebook">
+                    <i class="fab fa-facebook-f"></i> Facebook ile Giriş Yap
+                </button>
+                <button type="button" class="social-btn apple">
+                    <i class="fab fa-apple"></i> Apple ile Giriş Yap
+                </button>
+            </div>
+            
+            <div class="login-link" style="margin-top: 1rem;">
+                Hesabınız yok mu? <a href="register.html">Kayıt Olun</a>
+            </div>
+            
+            <div class="admin-login" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                <p style="text-align: center; margin-bottom: 1rem; color: var(--text-muted);">
+                    <i class="fas fa-shield-alt"></i> Yönetici Girişi
+                </p>
+                <button type="button" class="btn" style="background: #2d3748;" onclick="showAdminLogin()">
+                    <i class="fas fa-user-shield"></i> Yönetici Olarak Giriş Yap
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Şifre gösterme/gizleme fonksiyonu
+        function togglePassword(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            const toggleIcon = document.querySelector(`#${fieldId} + .toggle-password`);
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            }
+        }
+        
+        // Admin giriş formunu gösterme
+        function showAdminLogin() {
+            const email = prompt('Yönetici E-posta Adresi:');
+            if (!email) return;
+            
+            // Burada gerçek bir admin doğrulaması yapılmalıdır
+            // Örnek olarak basit bir doğrulama yapıyoruz
+            if (email.endsWith('@admin.com')) {
+                const password = prompt('Yönetici Şifresi:', '');
+                if (password === 'admin123') { // Bu sadece örnektir, gerçek bir uygulamada güvenli bir doğrulama kullanın
+                    // Başarılı giriş
+                    localStorage.setItem('isAdmin', 'true');
+                    window.location.href = 'admin-panel.html';
+                } else {
+                    alert('Hatalı şifre!');
+                }
+            } else {
+                alert('Geçersiz yönetici e-posta adresi!');
+            }
+        }
+        
+        // Form gönderimini yönetme
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('remember').checked;
+            
+            // Kullanıcıları localStorage'dan al
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            // Kullanıcıyı bul
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Kullanıcıyı oturum açık olarak işaretle
+                localStorage.setItem('currentUser', JSON.stringify({
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    fullname: user.fullname
+                }));
+                
+                // Son giriş tarihini güncelle
+                user.lastLogin = new Date().toISOString();
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Başarılı giriş mesajı ve yönlendirme
+                alert(`Hoş geldiniz ${user.fullname || user.username}!`);
+                window.location.href = 'index.html';
+            } else {
+                showError('Hatalı e-posta veya şifre!');
+            }
+        });
+        
+        // Hata gösterme fonksiyonu
+        function showError(message) {
+            // Burada hata mesajını gösterecek bir uyarı ekleyebilirsiniz
+            alert(message);
+        }
+    </script>
+</body>
+</html>

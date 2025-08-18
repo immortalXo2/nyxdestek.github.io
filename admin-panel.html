@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1976d2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Admin Paneli - Nyx Destek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #0d47a1;
+            --text-color: #333;
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --header-bg: #1a1a2e;
+            --error-color: #f44336;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: #1a202c;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            background: #2d3748;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: top 0.5s ease-in-out;
+            height: 66px;
+        }
+        
+        .admin-header.hide {
+            top: -100px;
+        }
+
+        .admin-header h1 {
+            color: #4299e1;
+            font-size: 1.5rem;
+        }
+
+        .admin-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-header .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .admin-header .logout-btn:hover {
+            background: #c53030;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 66px; /* Header yüksekliği kadar boşluk bırak */
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2d3748;
+            padding: 1.5rem 0;
+            border-right: 1px solid #4a5568;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            color: #a0aec0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: #2c5282;
+            color: white;
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            height: calc(100vh - 66px);
+        }
+
+        .card {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            color: #4299e1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #4a5568;
+        }
+
+        th {
+            color: #a0aec0;
+            font-weight: 500;
+            background: #2d3748;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background: #2d3748;
+        }
+
+        .status-active {
+            color: #68d391;
+            font-weight: 500;
+        }
+
+        .status-banned {
+            color: #fc8181;
+            font-weight: 500;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-danger {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c53030;
+        }
+
+        .btn-warning {
+            background: #dd6b20;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #c05621;
+        }
+
+        .btn-success {
+            background: #38a169;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #2f855a;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-card h3 {
+            color: #a0aec0;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4299e1;
+        }
+
+        .stat-card .stat-desc {
+            font-size: 0.875rem;
+            color: #a0aec0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .page-item {
+            padding: 0.5rem 0.75rem;
+            background: #2d3748;
+            border: 1px solid #4a5568;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-item:hover {
+            background: #4a5568;
+        }
+
+        .page-item.active {
+            background: #4299e1;
+            border-color: #4299e1;
+            color: white;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: 1px solid #4a5568;
+            border-radius: 4px;
+            background: #2d3748;
+            color: white;
+        }
+
+        .search-box button {
+            padding: 0.5rem 1rem;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background: #3182ce;
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <h1>Nyx Destek - Admin Paneli</h1>
+        <div style="font-size: 0.9rem; color: #a0aec0; margin-top: 0.5rem;">
+            <i class="fab fa-telegram"></i> Owner: 
+            <a href="https://t.me/immortalXso2s" target="_blank" style="color: #4299e1; text-decoration: none;">@immortalXso2s</a>
+        </div>
+        <div class="user-info">
+            <span>Hoş Geldiniz, <strong id="admin-username">Admin</strong></span>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+            </button>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <nav class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item active" data-tab="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Gösterge Paneli</span>
+                </li>
+                <li class="menu-item" data-tab="users">
+                    <i class="fas fa-users"></i>
+                    <span>Kullanıcılar</span>
+                </li>
+                <li class="menu-item" data-tab="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Ayarlar</span>
+                </li>
+                <li class="menu-item" data-tab="logs">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Kayıtlar</span>
+                </li>
+                <li class="menu-item">
+                    <a href="payment-history.html" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+                        <i class="fas fa-history"></i>
+                        <span>Ödeme Geçmişi</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <!-- Gösterge Paneli -->
+            <div id="dashboard" class="tab-content active">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>Toplam Kullanıcı</h3>
+                        <div class="stat-value" id="total-users">0</div>
+                        <div class="stat-desc">Toplam kayıtlı kullanıcı</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Aktif Kullanıcılar</h3>
+                        <div class="stat-value" id="active-users">0</div>
+                        <div class="stat-desc">Şu anda aktif kullanıcı</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Bugünkü Kayıtlar</h3>
+                        <div class="stat-value" id="today-registrations">0</div>
+                        <div class="stat-desc">Bugün kayıt olan kullanıcı</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Banlı Kullanıcılar</h3>
+                        <div class="stat-value" id="banned-users">0</div>
+                        <div class="stat-desc">Toplam banlı kullanıcı</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Son Kullanıcılar</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Kullanıcı Adı</th>
+                                    <th>Kayıt Tarihi</th>
+                                    <th>Durum</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-users">
+                                <!-- Kullanıcılar JavaScript ile eklenecek -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kullanıcılar -->
+            <div id="users" class="tab-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Tüm Kullanıcılar</h2>
+                        <div class="search-box">
+                            <input type="text" id="user-search" placeholder="Kullanıcı ara...">
+                            <button onclick="searchUsers()"><i class="fas fa-search"></i> Ara</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Kullanıcı Adı</th>
+                                    <th>Kayıt Tarihi</th>
+                                    <th>Son Giriş</th>
+                                    <th>Durum</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-users">
+                                <!-- Tüm kullanıcılar JavaScript ile eklenecek -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination">
+                        <button class="page-item"><i class="fas fa-angle-double-left"></i></button>
+                        <button class="page-item active">1</button>
+                        <button class="page-item">2</button>
+                        <button class="page-item">3</button>
+                        <button class="page-item"><i class="fas fa-angle-double-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ayarlar -->
+            <div id="settings" class="tab-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Genel Ayarlar</h2>
+                    </div>
+                    <div class="form-group">
+                        <label>Site Başlığı</label>
+                        <input type="text" class="form-control" value="Nyx Destek">
+                    </div>
+                    <div class="form-group">
+                        <label>Bakım Modu</label>
+                        <div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                            <span class="form-text text-muted">Aktif olduğunda site ziyaretçilere kapalı olacaktır.</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-success">Ayarları Kaydet</button>
+                </div>
+            </div>
+
+            <!-- Kayıtlar -->
+            <div id="logs" class="tab-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Sistem Kayıtları</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Kullanıcı</th>
+                                    <th>İşlem</th>
+                                    <th>IP Adresi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="system-logs">
+                                <tr>
+                                    <td>16.08.2023 15:30:22</td>
+                                    <td>admin</td>
+                                    <td>Giriş yaptı</td>
+                                    <td>192.168.1.1</td>
+                                </tr>
+                                <tr>
+                                    <td>16.08.2023 15:25:10</td>
+                                    <td>user1</td>
+                                    <td>Kayıt oldu</td>
+                                    <td>192.168.1.2</td>
+                                </tr>
+                                <tr>
+                                    <td>16.08.2023 15:20:05</td>
+                                    <td>admin</td>
+                                    <td>Kullanıcı düzenlendi: user1</td>
+                                    <td>192.168.1.1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Admin giriş kontrolü
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+            
+            if (!isAdmin) {
+                // Eğer admin değilse, giriş sayfasına yönlendir
+                alert('Yetkisiz erişim! Yönetici girişi yapmalısınız.');
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            // Admin paneline özel JavaScript kodları
+            initAdminPanel();
+            
+            // Menü tıklamalarını dinle
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    // Tüm menü öğelerinden active sınıfını kaldır
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    // Tüm tab içeriklerini gizle
+                    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+                    
+                    // Tıklanan menü öğesine active sınıfını ekle
+                    this.classList.add('active');
+                    // İlgili tab içeriğini göster
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).style.display = 'block';
+                });
+            });
+            
+            // Kullanıcı verilerini yükle
+            loadDashboardData();
+            loadUsers();
+        });
+        
+        // Admin paneli başlatma
+        function initAdminPanel() {
+            // Scroll ile header'ı gizle/göster
+            let lastScroll = 0;
+            const header = document.querySelector('.admin-header');
+            const headerHeight = header.offsetHeight;
+            
+            const handleScroll = () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('hide');
+                    return;
+                }
+                
+                // Küçük scroll hareketlerini engellemek için bir eşik değeri ekliyoruz
+                if (Math.abs(currentScroll - lastScroll) < 5) return;
+                
+                if (currentScroll > lastScroll && currentScroll > headerHeight) {
+                    // Aşağı kaydırma
+                    if (!header.classList.contains('hide')) {
+                        header.classList.add('hide');
+                    }
+                } else {
+                    // Yukarı kaydırma
+                    if (header.classList.contains('hide')) {
+                        header.classList.remove('hide');
+                    }
+                }
+                
+                lastScroll = currentScroll;
+            };
+            
+            window.addEventListener('scroll', handleScroll);
+            
+            // Admin bilgilerini yükle
+            const currentUser = { username: 'Admin' }; // Örnek kullanıcı bilgisi
+            if (currentUser) {
+                const adminUsername = document.getElementById('admin-username');
+                if (adminUsername) {
+                    adminUsername.textContent = currentUser.username;
+                }
+            }
+        }
+
+        // Çıkış yapma fonksiyonu
+        function logout() {
+            // Admin oturumunu sonlandır
+            localStorage.removeItem('isAdmin');
+            // Ana sayfaya yönlendir
+            window.location.href = 'index.html';
+        }
+
+        // Gösterge paneline veri yükleme
+        function loadDashboardData() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const today = new Date().toISOString().split('T')[0];
+            
+            document.getElementById('total-users').textContent = users.length;
+            document.getElementById('active-users').textContent = users.filter(u => u.lastLogin).length; // Basitçe son giriş yapanları aktif sayıyoruz
+            document.getElementById('today-registrations').textContent = users.filter(u => u.createdAt && u.createdAt.startsWith(today)).length;
+            document.getElementById('banned-users').textContent = users.filter(u => u.status === 'banned').length;
+
+            // Son kullanıcıları yükle
+            const recentUsersHtml = users
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .slice(0, 5)
+                .map(user => `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.username}</td>
+                        <td>${new Date(user.createdAt).toLocaleString()}</td>
+                        <td class="status-active">Aktif</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">Düzenle</button>
+                            <button class="btn btn-sm btn-danger" onclick="banUser(${user.id})">Banla</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+            document.getElementById('recent-users').innerHTML = recentUsersHtml || '<tr><td colspan="5" class="text-center">Kullanıcı bulunamadı</td></tr>';
+        }
+
+        // Tüm kullanıcıları yükle
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const usersHtml = users.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${new Date(user.createdAt).toLocaleString()}</td>
+                    <td>${user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Hiç giriş yapmadı'}</td>
+                    <td class="${user.status === 'banned' ? 'status-banned' : 'status-active'}">
+                        ${user.status === 'banned' ? 'Banlı' : 'Aktif'}
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="editUser(${user.id})">Düzenle</button>
+                        ${user.status !== 'banned' 
+                            ? `<button class="btn btn-sm btn-danger" onclick="banUser(${user.id})">Banla</button>`
+                            : `<button class="btn btn-sm btn-success" onclick="unbanUser(${user.id})">Banı Kaldır</button>`
+                        }
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('all-users').innerHTML = usersHtml || '<tr><td colspan="6" class="text-center">Kullanıcı bulunamadı</td></tr>';
+        }
+
+        // Kullanıcı ara
+        function searchUsers() {
+            const searchTerm = document.getElementById('user-search').value.toLowerCase();
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            const filteredUsers = users.filter(user => 
+                user.username.toLowerCase().includes(searchTerm) ||
+                user.id.toString().includes(searchTerm)
+            );
+
+            const usersHtml = filteredUsers.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${new Date(user.createdAt).toLocaleString()}</td>
+                    <td>${user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Hiç giriş yapmadı'}</td>
+                    <td class="${user.status === 'banned' ? 'status-banned' : 'status-active'}">
+                        ${user.status === 'banned' ? 'Banlı' : 'Aktif'}
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="editUser(${user.id})">Düzenle</button>
+                        ${user.status !== 'banned' 
+                            ? `<button class="btn btn-sm btn-danger" onclick="banUser(${user.id})">Banla</button>`
+                            : `<button class="btn btn-sm btn-success" onclick="unbanUser(${user.id})">Banı Kaldır</button>`
+                        }
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('all-users').innerHTML = usersHtml || '<tr><td colspan="6" class="text-center">Eşleşen kullanıcı bulunamadı</td></tr>';
+        }
+
+        // Kullanıcı düzenleme fonksiyonu
+        function editUser(userId) {
+            alert(`Kullanıcı düzenleme: ${userId}`);
+            // Burada kullanıcı düzenleme modalı açılabilir
+        }
+
+        // Kullanıcıyı banlama fonksiyonu
+        function banUser(userId) {
+            if (confirm('Bu kullanıcıyı banlamak istediğinize emin misiniz?')) {
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const updatedUsers = users.map(user => {
+                    if (user.id === userId) {
+                        return { ...user, status: 'banned' };
+                    }
+                    return user;
+                });
+                
+                localStorage.setItem('users', JSON.stringify(updatedUsers));
+                loadUsers();
+                loadDashboardData();
+                alert('Kullanıcı başarıyla banlandı!');
+            }
+        }
+
+        // Kullanıcının banını kaldırma fonksiyonu
+        function unbanUser(userId) {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const updatedUsers = users.map(user => {
+                if (user.id === userId) {
+                    // Kullanıcı nesnesinden status alanını kaldır
+                    const { status, ...rest } = user;
+                    return rest;
+                }
+                return user;
+            });
+            
+            localStorage.setItem('users', JSON.stringify(updatedUsers));
+            loadUsers();
+            loadDashboardData();
+            alert('Kullanıcının banı kaldırıldı!');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol - Nyx Destek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6cf7;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-bg: #f8f9fa;
+            --text-color: #2c3e50;
+            --text-muted: #6c757d;
+            --border-radius: 8px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .register-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .register-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .register-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .register-form {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.25);
+            outline: none;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: #3a5bd9;
+            transform: translateY(-2px);
+        }
+
+        .terms {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .terms a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 0.25rem;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            height: 4px;
+            background: #eee;
+            margin-top: 0.5rem;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            background: #dc3545;
+            transition: var(--transition);
+        }
+
+        .password-hints {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .password-hint {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .password-hint i {
+            margin-right: 0.5rem;
+            font-size: 0.7rem;
+        }
+
+        .hint-valid {
+            color: var(--success-color);
+        }
+
+        .hint-invalid {
+            color: var(--danger-color);
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                margin: 20px;
+            }
+            
+            .register-header {
+                padding: 1.5rem 1rem;
+            }
+            
+            .register-form {
+                padding: 1.5rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-header">
+            <h1>Hesap Oluştur</h1>
+            <p>Nyx Destek ailesine katılın</p>
+        </div>
+        
+        <form class="register-form" id="registerForm">
+            <div class="form-group">
+                <label for="fullname">Ad Soyad</label>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="fullname" class="form-control" placeholder="Adınız ve soyadınız" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">E-posta Adresi</label>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" class="form-control" placeholder="ornek@email.com" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Şifre</label>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                    <i class="fas fa-eye-slash toggle-password" 
+                       style="position: absolute; right: 15px; cursor: pointer; color: var(--text-muted);"
+                       onclick="togglePassword('password')"></i>
+                </div>
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="passwordStrength"></div>
+                </div>
+                <div class="password-hints">
+                    <div class="password-hint" id="hintLength">
+                        <i class="fas fa-circle"></i>
+                        <span>En az 8 karakter</span>
+                    </div>
+                    <div class="password-hint" id="hintUppercase">
+                        <i class="fas fa-circle"></i>
+                        <span>En az 1 büyük harf</span>
+                    </div>
+                    <div class="password-hint" id="hintNumber">
+                        <i class="fas fa-circle"></i>
+                        <span>En az 1 sayı</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Şifre Tekrar</label>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="••••••••" required>
+                    <i class="fas fa-eye-slash toggle-password" 
+                       style="position: absolute; right: 15px; cursor: pointer; color: var(--text-muted);"
+                       onclick="togglePassword('confirmPassword')"></i>
+                </div>
+                <div id="passwordMatch" style="color: var(--danger-color); font-size: 0.8rem; margin-top: 0.25rem; display: none;">
+                    Şifreler eşleşmiyor
+                </div>
+            </div>
+            
+            <div class="form-group" style="display: flex; align-items: flex-start;">
+                <input type="checkbox" id="terms" style="margin-right: 10px; margin-top: 3px;" required>
+                <label for="terms" style="margin: 0; font-weight: normal; cursor: pointer; font-size: 0.9rem;">
+                    <a href="#" style="color: var(--primary-color);">Kullanım koşullarını</a> ve 
+                    <a href="#" style="color: var(--primary-color);">gizlilik politikasını</a> okudum ve kabul ediyorum.
+                </label>
+            </div>
+            
+            <button type="submit" class="btn">Hesap Oluştur</button>
+            
+            <div class="login-link">
+                Zaten bir hesabınız var mı? <a href="login.html">Giriş Yapın</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Şifre gösterme/gizleme fonksiyonu
+        function togglePassword(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            const toggleIcon = document.querySelector(`#${fieldId} + .toggle-password`);
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            }
+        }
+        
+        // Şifre güç kontrolü
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            const hints = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[^A-Za-z0-9]/.test(password)
+            };
+            
+            // Güç puanı hesapla
+            if (password.length >= 8) strength += 25;
+            if (password.length >= 12) strength += 15;
+            if (hints.uppercase) strength += 20;
+            if (hints.number) strength += 20;
+            if (hints.special) strength += 20;
+            
+            // Güç çubuğunu güncelle
+            const strengthBar = document.getElementById('passwordStrength');
+            if (strength < 40) {
+                strengthBar.style.backgroundColor = '#dc3545';
+            } else if (strength < 70) {
+                strengthBar.style.backgroundColor = '#ffc107';
+            } else {
+                strengthBar.style.backgroundColor = '#28a745';
+            }
+            strengthBar.style.width = Math.min(strength, 100) + '%';
+            
+            // İpuçlarını güncelle
+            document.getElementById('hintLength').className = `password-hint ${hints.length ? 'hint-valid' : 'hint-invalid'}`;
+            document.getElementById('hintUppercase').className = `password-hint ${hints.uppercase ? 'hint-valid' : 'hint-invalid'}`;
+            document.getElementById('hintNumber').className = `password-hint ${hints.number ? 'hint-valid' : 'hint-invalid'}`;
+            
+            return strength >= 60; // En az orta seviye güç
+        }
+        
+        // Form gönderimini yönetme
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Şifre kontrolü
+            if (password !== confirmPassword) {
+                document.getElementById('passwordMatch').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('passwordMatch').style.display = 'none';
+            }
+            
+            // Şifre güç kontrolü
+            if (!checkPasswordStrength(password)) {
+                alert('Lütfen daha güçlü bir şifre seçiniz.');
+                return;
+            }
+            
+            // Kullanıcı verilerini oluştur
+            const userData = {
+                id: Date.now(),
+                username: email.split('@')[0],
+                fullname: fullname,
+                email: email,
+                password: password, // Gerçek uygulamada şifre hash'lenmelidir
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                status: 'active'
+            };
+            
+            // Kullanıcıları localStorage'dan al veya boş dizi oluştur
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            // E-posta adresi zaten kullanılıyor mu kontrol et
+            if (users.some(user => user.email === email)) {
+                alert('Bu e-posta adresi zaten kullanılıyor. Lütfen farklı bir e-posta adresi deneyin.');
+                return;
+            }
+            
+            // Yeni kullanıcıyı ekle
+            users.push(userData);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Kullanıcıyı oturum açık olarak işaretle ve ana sayfaya yönlendir
+            localStorage.setItem('currentUser', JSON.stringify({
+                id: userData.id,
+                username: userData.username,
+                email: userData.email
+            }));
+            
+            // Başarılı kayıt mesajı ve yönlendirme
+            alert(`Hoş geldiniz ${fullname}! Başarıyla kayıt oldunuz.`);
+            window.location.href = 'index.html';
+        });
+        
+        // Şifre alanı değiştiğinde güç kontrolü yap
+        document.getElementById('password').addEventListener('input', function(e) {
+            checkPasswordStrength(e.target.value);
+        });
+        
+        // Şifre tekrar alanı değiştiğinde eşleşme kontrolü yap
+        document.getElementById('confirmPassword').addEventListener('input', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = e.target.value;
+            
+            if (password && confirmPassword) {
+                if (password !== confirmPassword) {
+                    document.getElementById('passwordMatch').style.display = 'block';
+                } else {
+                    document.getElementById('passwordMatch').style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

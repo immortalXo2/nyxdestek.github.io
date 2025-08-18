@@ -1,0 +1,2607 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyx Destek - so2 Hile Sistemi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="tawkto.css">
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #f5f7ff;
+            --text-color: #333;
+            --light-text: #666;
+            --border-color: #e0e0e0;
+            --white: #ffffff;
+            --shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            padding-top: 80px;
+            margin: 0;
+            min-height: 100vh;
+            line-height: 1.6;
+            color: var(--text-color);
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(26, 26, 46, 0.98);
+            padding: 0.8rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .version-badge {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 4px 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .version-text {
+            position: relative;
+            z-index: 2;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, #4a6bff, #9f7aea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        .version-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #4a6bff, #9f7aea, #4a6bff);
+            background-size: 200% 200%;
+            opacity: 0.3;
+            filter: blur(8px);
+            animation: gradientBG 3s ease infinite;
+            border-radius: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 5px rgba(74, 107, 255, 0.5); }
+            to { text-shadow: 0 0 10px rgba(159, 122, 234, 0.8); }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links .active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: white;
+            padding: 2rem;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .mobile-menu-overlay.active .mobile-menu-content {
+            right: 0;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        /* Ürün Kartları */
+        .products {
+            padding: 3rem 0;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            border: 1px solid #f0f0f0;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            border-color: #e0e0e0;
+        }
+
+        .product-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+            background: #f8f9fa;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .product-badge:empty {
+            display: none;
+        }
+
+        .product-details {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 220px);
+        }
+        
+        .product-meta {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0.75rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .current-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .old-price {
+            text-decoration: line-through;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        .discount-badge {
+            background: #ffebee;
+            color: #f44336;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .product-rating {
+            color: #ffc107;
+            font-size: 0.9rem;
+            margin: 0.5rem 0 1rem;
+        }
+        
+        .rating-count {
+            color: var(--light-text);
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+        
+        .product-stock {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .stock-text {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stock-count {
+            font-weight: 600;
+            color: #4caf50;
+        }
+        
+        .stock-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .stock-level {
+            height: 100%;
+            background: #4caf50;
+            transition: width 0.3s ease;
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .add-to-cart i {
+            font-size: 1rem;
+        }
+
+        .product-details h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .product-description {
+            color: var(--light-text);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: var(--light-text);
+            font-size: 1rem;
+            margin-right: 0.5rem;
+        }
+
+        .new-price {
+            color: var(--danger-color);
+        }
+
+        .btn.add-to-cart {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn.add-to-cart:hover {
+            background: #3a5bd9;
+        }
+
+        /* Modern Video Preview */
+        .video-preview {
+            margin: 5rem 0;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .video-preview h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        .video-preview h2:after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 4px;
+            background: var(--primary-color);
+            bottom: -10px;
+            left: 20%;
+            border-radius: 2px;
+        }
+
+        .video-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            background: #000;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Features Section Styles */
+        .features-section {
+            padding: 4rem 2rem;
+            background: #f8f9fa;
+            margin-top: 3rem;
+        }
+
+        .features-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .features-section h2:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: var(--primary-color);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-category {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-category-title {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f0f0f0;
+            font-size: 1.3rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .feature-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-name {
+            font-weight: 500;
+            color: #34495e;
+        }
+
+        .feature-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .toggle-label {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active {
+            background: var(--primary-color);
+        }
+
+        .toggle-switch.active:after {
+            transform: translateX(20px);
+        }
+
+        .feature-select {
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            cursor: pointer;
+            min-width: 100px;
+        }
+
+        .range-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .feature-range {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e0e0e0;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .feature-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .range-value {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            align-self: flex-end;
+        }
+
+        .config-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .config-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .config-btn:hover {
+            background: #3a5bd9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .more-features-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 0.9rem 1.8rem;
+            background: linear-gradient(135deg, var(--primary-color), #4a6cf7);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
+            width: 100%;
+            max-width: 350px;
+            margin: 1rem auto 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .more-features-btn i {
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .more-features-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 108, 247, 0.4);
+            background: linear-gradient(135deg, #4a6cf7, var(--primary-color));
+        }
+
+        .more-features-btn:hover i:last-child {
+            transform: translateX(5px);
+        }
+
+        .more-features-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .more-features-btn:hover::before {
+            left: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .features-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .config-buttons {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .config-btn {
+                width: 100%;
+            }
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .lightbox.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #lightbox-img {
+            max-width: 90%;
+            max-height: 90%;
+            border: 5px solid white;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+            text-decoration: none;
+            line-height: 1;
+        }
+
+        .lightbox-close:hover {
+            color: #ff4444;
+        }
+
+        .lightbox-nav {
+            position: fixed;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            padding: 0 20px;
+            z-index: 1001;
+            pointer-events: none;
+        }
+
+        .lightbox-prev,
+        .lightbox-next {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            font-size: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            pointer-events: auto;
+            backdrop-filter: blur(5px);
+        }
+
+        .lightbox-prev {
+            margin-left: 20px;
+        }
+
+        .lightbox-next {
+            margin-right: 20px;
+        }
+
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .lightbox-content {
+                max-width: 95vw;
+                max-height: 80vh;
+                padding: 10px;
+            }
+            
+            #lightbox-img {
+                max-height: 80vh;
+            }
+            
+            .lightbox-close {
+                top: 10px;
+                right: 15px;
+                font-size: 30px;
+            }
+            
+            .lightbox-prev,
+            .lightbox-next {
+                width: 40px;
+                height: 40px;
+                font-size: 24px;
+            }
+        }
+
+        /* Notification Stilleri */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification.error {
+            background: var(--danger-color);
+        }
+
+        .notification.warning {
+            background: var(--warning-color);
+            color: #000;
+        }
+
+        /* Sepet İkonu ve Sayacı */
+        .user-menu {
+            position: relative;
+            margin-left: 1rem;
+        }
+        
+        .login-link {
+            margin-left: 1rem;
+        }
+        
+        .btn-login {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-login:hover {
+            background: #3a5bd9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-login i {
+            font-size: 0.9rem;
+        }
+
+        .cart-icon {
+            position: relative;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        /* Sepet İkonu Stilleri */
+        .cart-item {
+            margin-left: 1rem;
+            position: relative;
+        }
+        
+        /* Sepet animasyonu */
+        .cart-animation {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        
+        /* Sepet ikonu sallama animasyonu */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+        
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+            40%, 60% { transform: translate3d(3px, 0, 0); }
+        }
+        
+        /* Sepete ekle buton durumları */
+        .add-to-cart {
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .add-to-cart:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        .add-to-cart:disabled,
+        .add-to-cart.out-of-stock {
+            background-color: #cccccc !important;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .add-to-cart.added {
+            background-color: var(--success-color) !important;
+        }
+        
+        .add-to-cart.added:after {
+            content: '✓';
+            margin-left: 5px;
+        }
+
+        .cart-icon {
+            color: white;
+            font-size: 1.2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        /* Kullanıcı Menüsü Stilleri */
+        .user-menu {
+            margin-left: 0.5rem;
+            position: relative;
+        }
+
+        .user-btn {
+            background: none;
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .user-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-btn i:first-child {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .user-btn i:last-child {
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            transition: transform 0.3s;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .user-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu a i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 0.25rem 0;
+        }
+
+        /* Ürünler Bölümü Stilleri */
+        .products-section {
+            padding: 4rem 0;
+            background-color: #f8f9fa;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin: 0;
+            color: #2c3e50;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .version-badge {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 6px 14px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-left: 10px;
+        }
+
+        .version-text {
+            position: relative;
+            z-index: 2;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, #4a6bff, #9f7aea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        .version-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #4a6bff, #9f7aea, #4a6bff);
+            background-size: 200% 200%;
+            opacity: 0.3;
+            filter: blur(8px);
+            animation: gradientBG 3s ease infinite;
+            border-radius: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 5px rgba(74, 107, 255, 0.5); }
+            to { text-shadow: 0 0 10px rgba(159, 122, 234, 0.8); }
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #8b5cf6);
+            border-radius: 2px;
+        }
+
+        /* Gallery Styles */
+        .gallery {
+            padding: 4rem 0;
+            background-color: #f8f9fa;
+        }
+
+        .gallery h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .gallery h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #8b5cf6);
+            border-radius: 2px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 0 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            height: 250px;
+            border-radius: 12px;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                padding: 0 1rem;
+                gap: 1rem;
+            }
+            
+            .gallery-item {
+                height: 200px;
+            }
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #4f46e5;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-details {
+            padding: 1.5rem;
+        }
+
+        .product-details h3 {
+            font-size: 1.5rem;
+            margin: 0 0 1.5rem 0;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .pricing-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
+        }
+
+        .pricing-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1rem;
+            color: #4b5563;
+        }
+
+        .pricing-list li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-list span {
+            font-weight: 600;
+            color: #4f46e5;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4338ca, #6d28d9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary i {
+            font-size: 1.2rem;
+        }
+
+        /* Mobil menüdeki stiller */
+        @media (max-width: 992px) {
+            .user-menu, .login-link {
+                margin: 1rem 0;
+                width: 100%;
+            }
+            
+            .login-link .btn-login {
+                width: 100%;
+                justify-content: center;
+                padding: 0.75rem 1rem;
+            }
+
+            .user-btn {
+                width: 100%;
+                justify-content: space-between;
+                padding: 1rem;
+                background: #f8f9fa;
+                color: var(--text-color);
+                border-radius: 4px;
+            }
+
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                background: transparent;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                display: none;
+                padding-left: 1rem;
+            }
+
+            .user-dropdown:hover .dropdown-menu,
+            .dropdown-menu.show {
+                display: block;
+            }
+
+            .dropdown-menu a {
+                padding: 0.75rem 0;
+                color: var(--light-text);
+            }
+
+            .dropdown-menu a:hover {
+                background-color: #f8f9fa;
+                color: var(--primary-color);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .mobile-menu-content .nav-links {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+
+            .mobile-menu-content .nav-links a {
+                color: var(--text-color);
+                padding: 0.5rem 0;
+                border-bottom: 1px solid #eee;
+            }
+        }
+
+        /* Version Badge Tooltip */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            width: 220px;
+            background-color: #2c3e50;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 12px;
+            position: absolute;
+            z-index: 10000;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            pointer-events: none;
+            margin-bottom: 10px;
+        }
+
+        .tooltip-arrow {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #2c3e50 transparent transparent transparent;
+        }
+
+        .tooltip p {
+            margin: 0;
+            color: #fff;
+        }
+
+        .tooltip.active {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content container">
+            <div class="logo">
+                <a href="index.html">Nyx Destek</a>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Ana Sayfa</a></li>
+                <li><a href="sistem-durumu.html">Sistem Durumu</a></li>
+                <li><a href="surum-notlari.html">Sürüm Notları</a></li>
+                <li><a href="anketler.html">Anketler</a></li>
+                <li><a href="yorumlar.html">Yorumlar</a></li>
+                <li><a href="payment-history.html">Ödeme Geçmişi</a></li>
+                
+                <!-- Sepet İkonu -->
+                <li class="cart-item">
+                    <a href="sepet.html" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </li>
+                
+                <!-- Kullanıcı Menüsü -->
+                <li class="user-menu">
+                    <div class="user-dropdown">
+                        <button class="user-btn">
+                            <i class="fas fa-user-circle"></i>
+                            <span class="username">Kullanıcı</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="profile.html"><i class="fas fa-user"></i> Profilim</a>
+                            <a href="orders.html"><i class="fas fa-box"></i> Siparişlerim</a>
+                            <a href="settings.html"><i class="fas fa-cog"></i> Ayarlar</a>
+                            <div class="divider"></div>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="login-link">
+                    <a href="login.html" class="btn btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Giriş Yap
+                    </a>
+                </li>
+            </ul>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobil Menü -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+        <div class="mobile-menu-content">
+            <button class="mobile-menu-close" id="mobileMenuClose">
+                &times;
+            </button>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Ana Sayfa</a></li>
+                <li><a href="sistem-durumu.html">Sistem Durumu</a></li>
+                <li><a href="surum-notlari.html">Sürüm Notları</a></li>
+                <li><a href="anketler.html">Anketler</a></li>
+                <li><a href="yorumlar.html">Yorumlar</a></li>
+                <li><a href="payment-history.html">Ödeme Geçmişi</a></li>
+                
+                <!-- Sepet İkonu -->
+                <li class="cart-item">
+                    <a href="sepet.html" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </li>
+                
+                <!-- Kullanıcı Menüsü -->
+                <li class="user-menu">
+                    <div class="user-dropdown">
+                        <button class="user-btn">
+                            <i class="fas fa-user-circle"></i>
+                            <span class="username">Kullanıcı</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="profile.html"><i class="fas fa-user"></i> Profilim</a>
+                            <a href="orders.html"><i class="fas fa-box"></i> Siparişlerim</a>
+                            <a href="settings.html"><i class="fas fa-cog"></i> Ayarlar</a>
+                            <div class="divider"></div>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="login-link">
+                    <a href="login.html" class="btn btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Giriş Yap
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Ana İçerik -->
+    <main class="container">
+        <section class="hero">
+            <h1>Nyx Destek'e Hoş Geldiniz</h1>
+            <p>En kaliteli hizmetlerimizle yanınızdayız. Aşağıdaki ürünlerimizi inceleyebilirsiniz.</p>
+        </section>
+
+        <!-- Ürünler Bölümü -->
+        <section class="products-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Ürünlerimiz</h2>
+                    <div class="version-badge tooltip-container">
+                        <span class="version-text">v0.34.2</span>
+                        <span class="version-glow"></span>
+                        <div class="tooltip">
+                            <p>Oyunun güncel sürümü NyX en son sürümde</p>
+                            <div class="tooltip-arrow"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="products-grid">
+                    <!-- PC Rootlu Ürün -->
+                    <div class="product-card">
+                        <div class="product-image" style="background-image: url('https://i.ibb.co/5XDFJRdS/pc1.png');">
+                            <div class="product-badge">PC Rootlu</div>
+                        </div>
+                        <div class="product-details">
+                            <h3>PC Rootlu Hizmet</h3>
+                            <ul class="pricing-list">
+                                <li>1 Haftalık <span>500₺</span></li>
+                                <li>1 Aylık <span>800₺</span></li>
+                                <li>Sınırsız <span>1000₺</span></li>
+                            </ul>
+                            <a href="https://t.me/xakcheat" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-telegram"></i> Satın Al
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Mobil Rootlu Ürün -->
+                    <div class="product-card">
+                        <div class="product-image" style="background-image: url('https://i.ibb.co/5gLWN1sG/nyxxx.jpg');">
+                            <div class="product-badge">Mobil Rootlu</div>
+                        </div>
+                        <div class="product-details">
+                            <h3>Mobil Rootlu Hizmet</h3>
+                            <ul class="pricing-list">
+                                <li>1 Haftalık <span>500₺</span></li>
+                                <li>1 Aylık <span>800₺</span></li>
+                                <li>Sınırsız <span>1000₺</span></li>
+                            </ul>
+                            <a href="https://t.me/xakcheat" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-telegram"></i> Satın Al
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modern Video Preview Section -->
+        <section class="video-preview">
+            <h2>Hile Ön İzlemesi</h2>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <iframe 
+                        src="https://www.youtube.com/embed/vKeTulBu3_M?si=9mflA2QNr_5Ens2w" 
+                        title="Hile Ön İzleme" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        referrerpolicy="strict-origin-when-cross-origin" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="video-controls" style="display: none;">
+                    <button class="play-pause">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    <div class="time">
+                        <span class="current-time">0:00</span> / <span class="duration">0:00</span>
+                    </div>
+                    <button class="fullscreen">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Özellikler Bölümü -->
+        <section class="features-section">
+            <h2>Fonksiyonlarımız</h2>
+            <div class="features-container">
+                <!-- Visualization -->
+                <div class="feature-category">
+                    <h3 class="feature-category-title">Visualization</h3>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <span class="feature-name">ESP</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Açık</span>
+                                <div class="toggle-switch"></div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">Box</span>
+                            <select class="feature-select">
+                                <option>Kapalı</option>
+                                <option>2D</option>
+                                <option>3D</option>
+                                <option>Corner</option>
+                            </select>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">Line</span>
+                            <select class="feature-select">
+                                <option>Kapalı</option>
+                                <option>Alt</option>
+                                <option>Orta</option>
+                                <option>Üst</option>
+                            </select>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">Skeleton</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Kapalı</span>
+                                <div class="toggle-switch"></div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">Bones Bypass [BAN RISK]</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Kapalı</span>
+                                <div class="toggle-switch"></div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">Nickname</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Açık</span>
+                                <div class="toggle-switch active"></div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">Sağlık</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Açık</span>
+                                <div class="toggle-switch active"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auto Aim -->
+                <div class="feature-category">
+                    <h3 class="feature-category-title">Auto Aim</h3>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <span class="feature-name">Aktif</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Kapalı</span>
+                                <div class="toggle-switch"></div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">RCS</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Açık</span>
+                                <div class="toggle-switch active"></div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">FOV Check</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Açık</span>
+                                <div class="toggle-switch active"></div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">Silent Aim</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Kapalı</span>
+                                <div class="toggle-switch"></div>
+                            </div>
+                        </div>
+                        <div class="feature-item range-item">
+                            <span class="feature-name">Smooth</span>
+                            <input type="range" min="0" max="100" value="50" class="feature-range">
+                            <span class="range-value">50</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Misc -->
+                <div class="feature-category">
+                    <h3 class="feature-category-title">Misc</h3>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <span class="feature-name">Bypass Rage</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Kapalı</span>
+                                <div class="toggle-switch"></div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">No Recoil</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Açık</span>
+                                <div class="toggle-switch active"></div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">Wallshot</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Kapalı</span>
+                                <div class="toggle-switch"></div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-name">Bunnyhop</span>
+                            <div class="feature-toggle">
+                                <span class="toggle-label">Açık</span>
+                                <div class="toggle-switch active"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Config Butonları -->
+            <div class="config-buttons">
+                <button class="config-btn">Config Yükle</button>
+                <button class="config-btn">Config Kaydet</button>
+                <button class="config-btn">Varsayılanlara Dön</button>
+                
+                <a href="https://t.me/nyxtrfonksiyon" target="_blank" class="more-features-btn">
+                    <i class="fas fa-robot"></i>
+                    <span>Daha Fazla Fonksiyon İçin Tıklayın</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- Fotoğraf Galerisi -->
+        <section class="gallery">
+            <h2>Galeri</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item" style="background-image: url('https://i.ibb.co/v4BPYtPy/nyx1.jpg')" data-src="https://i.ibb.co/v4BPYtPy/nyx1.jpg"></div>
+                <div class="gallery-item" style="background-image: url('https://i.ibb.co/F9dQrqF/nyx2.jpg')" data-src="https://i.ibb.co/F9dQrqF/nyx2.jpg"></div>
+                <div class="gallery-item" style="background-image: url('https://i.ibb.co/PzYVSHvW/nyx3.jpg')" data-src="https://i.ibb.co/PzYVSHvW/nyx3.jpg"></div>
+                <div class="gallery-item" style="background-image: url('https://i.ibb.co/5gLWN1sG/nyxxx.jpg')" data-src="https://i.ibb.co/5gLWN1sG/nyxxx.jpg"></div>
+                <div class="gallery-item" style="background-image: url('https://i.ibb.co/5XDFJRdS/pc1.png')" data-src="https://i.ibb.co/5XDFJRdS/pc1.png"></div>
+                <div class="gallery-item" style="background-image: url('https://i.ibb.co/TB1gyWMg/pc2.png')" data-src="https://i.ibb.co/TB1gyWMg/pc2.png"></div>
+            </div>
+        </section>
+
+        <!-- Lightbox -->
+        <div class="lightbox" id="lightbox">
+            <span class="lightbox-close">&times;</span>
+            <div class="lightbox-content">
+                <img src="" alt="" id="lightbox-img">
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Lightbox Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxClose = document.querySelector('.lightbox-close');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            let isLightboxOpen = false;
+
+            // Open lightbox
+            function openLightbox(imgSrc) {
+                lightboxImg.src = imgSrc;
+                lightboxImg.alt = 'Büyütülmüş Resim';
+                lightbox.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                isLightboxOpen = true;
+            }
+
+            // Close lightbox
+            function closeLightbox() {
+                lightbox.classList.remove('show');
+                document.body.style.overflow = 'auto';
+                isLightboxOpen = false;
+            }
+
+            // Add click event to gallery items
+            galleryItems.forEach((item) => {
+                item.addEventListener('click', function() {
+                    const imgSrc = this.getAttribute('data-src');
+                    openLightbox(imgSrc);
+                });
+            });
+
+            // Close button
+            lightboxClose.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeLightbox();
+            });
+
+            // Close when clicking outside the image
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+
+            // Close with ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isLightboxOpen) {
+                    closeLightbox();
+                }
+            });
+
+            // Swipe support for touch devices
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            lightbox.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, false);
+
+            lightbox.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, false);
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const swipeDistance = touchEndX - touchStartX;
+
+                if (Math.abs(swipeDistance) >= swipeThreshold) {
+                    if (swipeDistance > 0) {
+                        // Swipe right - previous image
+                        currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length;
+                    } else {
+                        // Swipe left - next image
+                        currentImageIndex = (currentImageIndex + 1) % galleryItems.length;
+                    }
+                    updateLightboxImage();
+                }
+            }
+        });
+
+        // Initialize other page functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Other initialization code here
+        });
+
+        // Sayfa yüklendiğinde çalışacak fonksiyon
+        document.addEventListener('DOMContentLoaded', function() {
+            // Kullanıcı oturum kontrolü
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const userMenus = document.querySelectorAll('.user-menu');
+            const loginLinks = document.querySelectorAll('.login-link');
+            const logoutBtns = document.querySelectorAll('#logoutBtn');
+            
+            // Çıkış yap butonuna tıklama olayı ekle
+            logoutBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'index.html';
+                });
+            });
+            
+            // Kullanıcı giriş yapmışsa menüyü güncelle
+            if (currentUser) {
+                // Kullanıcı adını güncelle
+                document.querySelectorAll('.username').forEach(el => {
+                    el.textContent = currentUser.fullname || currentUser.username;
+                });
+                
+                // Giriş yap butonlarını gizle
+                loginLinks.forEach(link => {
+                    link.style.display = 'none';
+                });
+                
+                // Kullanıcı menüsünü göster
+                userMenus.forEach(menu => {
+                    menu.style.display = 'block';
+                });
+            } else {
+                // Giriş yapılmamışsa kullanıcı menüsünü gizle
+                userMenus.forEach(menu => {
+                    menu.style.display = 'none';
+                });
+                
+                // Giriş yap butonlarını göster
+                loginLinks.forEach(link => {
+                    link.style.display = 'block';
+                });
+                
+                // Eğer giriş yapılmamışsa ve login sayfasında değilse yönlendir
+                if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('register.html')) {
+                    window.location.href = 'login.html';
+                }
+            }
+
+            // Sepet işlemleri için
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Sepeti güncelle ve localStorage'a kaydet
+            function updateCart() {
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                return cart;
+            }
+            
+            // Sepet toplamını hesapla
+            function calculateCartTotal() {
+                return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            }
+            
+            // Sepete ürün ekleme fonksiyonu
+            function addToCart(product) {
+                const existingProduct = cart.find(item => item.id === product.id);
+                const productCard = document.querySelector(`.product-card[data-id="${product.id}"]`);
+                const stock = productCard ? parseInt(productCard.dataset.stock) : 100;
+                
+                if (existingProduct) {
+                    if (existingProduct.quantity >= stock) {
+                        showNotification('Maksimum stok miktarına ulaşıldı!', 'error');
+                        return existingProduct;
+                    }
+                    existingProduct.quantity += 1;
+                } else {
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.image,
+                        stock: stock,
+                        quantity: 1
+                    });
+                }
+                
+                // Stok güncellemelerini yap
+                updateStockDisplays(product.id);
+                updateCart();
+                
+                return cart.find(item => item.id === product.id);
+            }
+            
+            // Stok görüntülerini güncelle
+            function updateStockDisplays(productId) {
+                const productCard = document.querySelector(`.product-card[data-id="${productId}"]`);
+                if (!productCard) return;
+                
+                const stock = parseInt(productCard.dataset.stock);
+                const cartItem = cart.find(item => item.id === productId);
+                const remainingStock = stock - (cartItem ? cartItem.quantity : 0);
+                
+                // Stok sayısını güncelle
+                const stockCount = productCard.querySelector('.stock-count');
+                if (stockCount) {
+                    stockCount.textContent = remainingStock;
+                }
+                
+                // Stok çubuğunu güncelle
+                const stockLevel = productCard.querySelector('.stock-level');
+                if (stockLevel) {
+                    const percentage = Math.max(0, (remainingStock / stock) * 100);
+                    stockLevel.style.width = `${percentage}%`;
+                    
+                    // Stok seviyesine göre renk değiştir
+                    if (percentage < 20) {
+                        stockLevel.style.background = '#f44336';
+                    } else if (percentage < 50) {
+                        stockLevel.style.background = '#ff9800';
+                    } else {
+                        stockLevel.style.background = '#4caf50';
+                    }
+                }
+                
+                // Eğer stok tükendiyse butonu devre dışı bırak
+                const addButton = productCard.querySelector('.add-to-cart');
+                if (addButton) {
+                    if (remainingStock <= 0) {
+                        addButton.classList.add('out-of-stock');
+                        addButton.innerHTML = '<i class="fas fa-times"></i> Stokta Yok';
+                        addButton.disabled = true;
+                    } else if (cartItem && cartItem.quantity >= stock) {
+                        addButton.classList.add('out-of-stock');
+                        addButton.innerHTML = '<i class="fas fa-check"></i> Sepete Eklendi';
+                        addButton.disabled = true;
+                    }
+                }
+            }
+            
+            // Sayfa yüklendiğinde stok durumlarını güncelle
+            function initializeStockDisplays() {
+                document.querySelectorAll('.product-card').forEach(card => {
+                    const productId = card.dataset.id;
+                    if (productId) {
+                        updateStockDisplays(productId);
+                    }
+                });
+            }
+            
+            // Sepet sayacını güncelleme fonksiyonu
+            function updateCartCount() {
+                const cartCountElements = document.querySelectorAll('.cart-count');
+                const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+                
+                cartCountElements.forEach(element => {
+                    if (totalItems > 0) {
+                        element.textContent = totalItems;
+                        element.style.display = 'flex';
+                    } else {
+                        element.style.display = 'none';
+                    }
+                });
+                
+                return totalItems;
+            }
+            
+            // Bildirim gösterme fonksiyonu
+            function showNotification(message, type = 'success') {
+                // Eğer aynı mesajdan zaten varsa çık
+                if (document.querySelector(`.notification:contains("${message}")`)) return;
+                
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                // Bildirimi otomatik kapat
+                setTimeout(() => {
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 300);
+                    }, 3000);
+                }, 100);
+            }
+            
+            // Sepete ekle butonlarına tıklama olayı ekle
+            function setupAddToCartButtons() {
+                document.querySelectorAll('.add-to-cart').forEach(button => {
+                    // Önceki event listener'ları temizle
+                    const newButton = button.cloneNode(true);
+                    button.parentNode.replaceChild(newButton, button);
+                    
+                    newButton.addEventListener('click', function() {
+                        const productCard = this.closest('.product-card');
+                        const productId = productCard.dataset.id;
+                        const productName = productCard.querySelector('h3').textContent;
+                        const productPrice = parseFloat(productCard.querySelector('.product-price').textContent.replace(/[^0-9,]/g, '').replace(',', '.'));
+                        const productImage = productCard.querySelector('img').src;
+                        const productStock = productCard.dataset.stock ? parseInt(productCard.dataset.stock) : 100; // Varsayılan stok değeri
+
+                        // Stok kontrolü
+                        const existingItem = cart.find(item => item.id === productId);
+                        if (existingItem && existingItem.quantity >= productStock) {
+                            showNotification('Üzgünüz, maksimum stok miktarına ulaşıldı!', 'error');
+                            return;
+                        }
+
+                        const addedItem = addToCart({
+                            id: productId,
+                            name: productName,
+                            price: productPrice,
+                            image: productImage,
+                            stock: productStock,
+                            quantity: 1
+                        });
+                        
+                        // Butonu güncelle
+                        if (addedItem.quantity >= productStock) {
+                            this.classList.add('out-of-stock');
+                            this.innerHTML = '<i class="fas fa-times"></i> Stokta Yok';
+                            this.disabled = true;
+                        }
+                        
+                        // Bildirim göster
+                        showNotification(`"${productName}" sepete eklendi (${addedItem.quantity} adet)`, 'success');
+                        
+                        // Sepet animasyonu
+                        animateAddToCart(this);
+                    });
+                });
+            }
+            
+            // Sepete ekleme animasyonu
+            function animateAddToCart(button) {
+                const cartIcon = document.querySelector('.cart-icon');
+                if (!cartIcon) return;
+                
+                const buttonRect = button.getBoundingClientRect();
+                const cartRect = cartIcon.getBoundingClientRect();
+                
+                const animation = document.createElement('div');
+                animation.className = 'cart-animation';
+                animation.style.left = `${buttonRect.left}px`;
+                animation.style.top = `${buttonRect.top}px`;
+                document.body.appendChild(animation);
+                
+                // Animasyonu başlat
+                setTimeout(() => {
+                    animation.style.left = `${cartRect.left}px`;
+                    animation.style.top = `${cartRect.top}px`;
+                    animation.style.transform = 'scale(0.5)';
+                    animation.style.opacity = '0';
+                }, 10);
+                
+                // Animasyon bittiğinde temizle
+                animation.addEventListener('transitionend', () => {
+                    animation.remove();
+                    // Sepet ikonunu salla
+                    cartIcon.classList.add('shake');
+                    setTimeout(() => cartIcon.classList.remove('shake'), 500);
+                });
+            }
+            
+            // Sayfa yüklendiğinde gerekli ayarlamaları yap
+            document.addEventListener('DOMContentLoaded', function() {
+                setupAddToCartButtons();
+                updateCartCount();
+                initializeStockDisplays();
+                
+                // Sepet sayfasına yönlendirme
+                document.querySelectorAll('.cart-icon').forEach(icon => {
+                    icon.addEventListener('click', function(e) {
+                        if (cart.length === 0) {
+                            e.preventDefault();
+                            showNotification('Sepetiniz boş', 'info');
+                        }
+                    });
+                });
+            });
+            
+            // Sepet sayfasına yönlendirme
+            document.querySelectorAll('.cart-icon').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    if (cart.length === 0) {
+                        e.preventDefault();
+                        showNotification('Sepetiniz boş', 'info');
+                    }
+                });
+            });
+            
+            // Kullanıcı işlemleri
+            document.addEventListener('DOMContentLoaded', function() {
+                // Kullanıcı adını güncelle
+                const usernameElements = document.querySelectorAll('.username');
+                if (currentUser && usernameElements.length > 0) {
+                    usernameElements.forEach(element => {
+                        element.textContent = currentUser.username || 'Kullanıcı';
+                    });
+                }
+
+                // Çıkış yap butonu
+                document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'login.html';
+                });
+            });
+
+            // Video oynatma butonu
+            const playButton = document.querySelector('.play-button');
+            const video = document.getElementById('productVideo');
+            
+            if (playButton && video) {
+                playButton.addEventListener('click', function() {
+                    video.play();
+                    this.style.display = 'none';
+                    video.setAttribute('controls', 'true');
+                });
+                
+                video.addEventListener('play', function() {
+                    playButton.style.display = 'none';
+                });
+                
+                video.addEventListener('pause', function() {
+                    playButton.style.display = 'flex';
+                });
+            }
+
+            // Galeri resimlerine tıklama
+            document.querySelectorAll('.gallery-item').forEach((item, index) => {
+                item.addEventListener('click', function() {
+                    openLightbox(index);
+                });
+            });
+
+            // Lightbox açma fonksiyonu
+            function openLightbox(index) {
+                // Lightbox oluştur
+                const lightbox = document.createElement('div');
+                lightbox.className = 'lightbox';
+                lightbox.innerHTML = `
+                    <div class="lightbox-content">
+                        <span class="lightbox-close">&times;</span>
+                        <img src="" alt="Galeri Resmi">
+                        <div class="lightbox-nav">
+                            <button class="lightbox-prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="lightbox-next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(lightbox);
+                document.body.style.overflow = 'hidden';
+                
+                const items = document.querySelectorAll('.gallery-item');
+                const lightboxImg = lightbox.querySelector('img');
+                const closeBtn = lightbox.querySelector('.lightbox-close');
+                const prevBtn = lightbox.querySelector('.lightbox-prev');
+                const nextBtn = lightbox.querySelector('.lightbox-next');
+                
+                // Resmi yükle
+                lightboxImg.src = items[index].style.backgroundImage.replace('url("', '').replace('")', '');
+                
+                // Kapatma butonu
+                closeBtn.addEventListener('click', function() {
+                    lightbox.remove();
+                    document.body.style.overflow = '';
+                });
+                
+                // Önceki butonu
+                prevBtn.addEventListener('click', function() {
+                    index = (index - 1 + items.length) % items.length;
+                    lightboxImg.src = items[index].style.backgroundImage.replace('url("', '').replace('")', '');
+                });
+                
+                // Sonraki butonu
+                nextBtn.addEventListener('click', function() {
+                    index = (index + 1) % items.length;
+                    lightboxImg.src = items[index].style.backgroundImage.replace('url("', '').replace('")', '');
+                });
+                
+                // Klavye kontrolleri
+                document.addEventListener('keydown', function handleKeyDown(e) {
+                    if (e.key === 'Escape') {
+                        lightbox.remove();
+                        document.body.style.overflow = '';
+                        document.removeEventListener('keydown', handleKeyDown);
+                    } else if (e.key === 'ArrowLeft') {
+                        prevBtn.click();
+                    } else if (e.key === 'ArrowRight') {
+                        nextBtn.click();
+                    }
+                });
+            }
+            
+            // Sayfa yüklendiğinde sepet sayacını güncelle
+            updateCartCount();
+
+            // Kullanıcı adını güncelle
+            const usernameElements = document.querySelectorAll('.username');
+            if (currentUser && usernameElements.length > 0) {
+                usernameElements.forEach(element => {
+                    element.textContent = currentUser.username || 'Kullanıcı';
+                });
+            }
+
+            // Mobil menüde kullanıcı menüsü açma/kapama
+            document.addEventListener('click', function(e) {
+                const userBtn = e.target.closest('.user-btn');
+                const dropdownMenu = document.querySelector('.dropdown-menu');
+                
+                if (userBtn) {
+                    e.preventDefault();
+                    const menu = userBtn.nextElementSibling;
+                    if (menu && menu.classList.contains('dropdown-menu')) {
+                        menu.classList.toggle('show');
+                    }
+                } else if (dropdownMenu && !e.target.closest('.dropdown-menu')) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+
+            // Çıkış yap butonu
+            document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            });
+
+            // Kullanıcı bilgilerini göster
+            if (currentUser) {
+                const userInfo = document.createElement('div');
+                userInfo.className = 'user-info';
+                userInfo.innerHTML = `
+                    <span>${currentUser.username}</span>
+                    ${currentUser.isAdmin ? '<a href="admin-panel.html" class="admin-panel-link">Yönetim Paneli</a>' : ''}
+                `;
+                
+                const logoutBtn = document.createElement('button');
+                logoutBtn.id = 'logout-btn';
+                logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Çıkış Yap';
+                logoutBtn.onclick = function() {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'login.html';
+                };
+
+                document.querySelector('header .container').appendChild(userInfo);
+                document.querySelector('header .container').appendChild(logoutBtn);
+            }
+
+            // Mobil menü işlevselliği
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+            if (mobileMenuBtn && mobileMenuOverlay && mobileMenuClose) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenuOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+
+                mobileMenuClose.addEventListener('click', function() {
+                    mobileMenuOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+
+                mobileMenuOverlay.addEventListener('click', function(e) {
+                    if (e.target === mobileMenuOverlay) {
+                        mobileMenuOverlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+
+            // Tema değiştirme
+            const themeToggle = document.querySelector('.theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('dark-theme');
+                    const isDarkMode = document.body.classList.contains('dark-theme');
+                    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+                    
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        if (isDarkMode) {
+                            icon.classList.remove('fa-moon');
+                            icon.classList.add('fa-sun');
+                        } else {
+                            icon.classList.remove('fa-sun');
+                            icon.classList.add('fa-moon');
+                        }
+                    }
+                });
+
+                // Sayfa yüklendiğinde tema kontrolü
+                if (localStorage.getItem('theme') === 'dark') {
+                    document.body.classList.add('dark-theme');
+                    const icon = themeToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-moon');
+                        icon.classList.add('fa-sun');
+                    }
+                }
+            }
+
+            // Header scroll davranışı
+            const header = document.querySelector('header');
+            if (header) {
+                let lastScroll = 0;
+                const headerHeight = header.offsetHeight;
+                
+                window.addEventListener('scroll', function() {
+                    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    if (currentScroll <= 0) {
+                        header.classList.remove('hide');
+                        return;
+                    }
+                    
+                    if (currentScroll > lastScroll && currentScroll > headerHeight) {
+                        header.classList.add('hide');
+                    } else if (currentScroll < lastScroll) {
+                        header.classList.remove('hide');
+                    }
+                    
+                    lastScroll = currentScroll;
+                });
+            }
+        });
+    </script>
+    <script src="js/utils.js"></script>
+    <script src="js/feedback.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/scripts.js"></script>
+    
+    <script>
+        // Tooltip functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const versionBadge = document.querySelector('.version-text');
+            const tooltip = document.querySelector('.tooltip');
+            
+            if (versionBadge && tooltip) {
+                // Show tooltip on click
+                versionBadge.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    tooltip.classList.toggle('active');
+                });
+                
+                // Close tooltip when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (e.target !== versionBadge && !tooltip.contains(e.target)) {
+                        tooltip.classList.remove('active');
+                    }
+                });
+                
+                // Close tooltip when pressing Escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        tooltip.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
+    
+    <!-- Tawk.to Live Chat with Custom Button -->
+    
+    <!-- Tawk.to Button -->
+    <div class="tawk-button" id="tawk-button">
+        <i class="fas fa-comments"></i>
+    </div>
+    
+    <!-- Tawk.to Script -->
+    <script>
+    // Toggle Tawk.to chat
+    function toggleTawkTo() {
+        if (!window.Tawk_API) {
+            // Load Tawk.to script
+            const s1 = document.createElement('script');
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/YOUR_TAWKTO_WIDGET_ID/default';
+            s1.charset = 'UTF-8';
+            s1.crossOrigin = '*';
+            document.body.appendChild(s1);
+            
+            // Initialize Tawk.to
+            window.Tawk_API = window.Tawk_API || {};
+            window.Tawk_LoadStart = new Date();
+            
+            // Set up Tawk.to attributes
+            window.Tawk_API.onLoad = function() {
+                window.Tawk_API.setAttributes({
+                    'name': 'Nyx Destek',
+                    'email': 'destek@nyx.com',
+                    'hash': 'hash'
+                });
+            };
+        } else if (window.Tawk_API.toggle) {
+            window.Tawk_API.toggle();
+        }
+    }
+    
+    // Initialize Tawk.to button
+    document.addEventListener('DOMContentLoaded', function() {
+        const tawkButton = document.getElementById('tawk-button');
+        if (tawkButton) {
+            tawkButton.addEventListener('click', toggleTawkTo);
+        }
+    });
+    </script>
+</body>
+</html>
